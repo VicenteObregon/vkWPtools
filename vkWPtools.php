@@ -11,9 +11,14 @@ License: GPL2
 
 if (!defined('WP_CONTENT_DIR'))
 	define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
-mkdir(WP_CONTENT_DIR . '/vkWPtools');
-mkdir(WP_CONTENT_DIR . '/vkWPtools/backups');
-mkdir(WP_CONTENT_DIR . '/vkWPtools/backups/themes');
+$directories = array();
+$directories[] = WP_CONTENT_DIR . '/vkWPtools';
+$directories[] = WP_CONTENT_DIR . '/vkWPtools/backups';
+$directories[] = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
+foreach ($directories as $directory) {
+	if (!is_dir($directory))
+		mkdir($directory);
+}
 
 function vkWPtools_options() {
 	if (!current_user_can('manage_options')) {
@@ -28,7 +33,12 @@ function vkWPtools_menu() {
 
 function vkWPtools_backup_theme() {
 	$theme = $_POST['theme'];
-	die($theme);
+	$directory = WP_CONTENT_DIR . "/themes/{$theme}";
+	$filename = WP_CONTENT_DIR . "/vkWPtools/backups/themes/{$theme}.zip";
+	$command = "zip -r \"{$filename}\" \"{$directory}\"";
+	exec($command);
+	$url = content_url() . "/vkWPtools/backups/themes/{$theme}.zip";
+	die($url);
 }
 
 add_action('admin_menu', 'vkWPtools_menu');
