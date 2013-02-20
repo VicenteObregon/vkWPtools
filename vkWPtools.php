@@ -31,6 +31,13 @@ function vkWPtools_menu() {
 	add_options_page('vkWPtools Options', 'vkWPtools', 'manage_options', 'vkWPtools', 'vkWPtools_options');
 }
 
+function vkWPtools_clean_backups() {
+	$directory = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
+	$command = "rm -f \"{$directory}\"/*.zip";
+	exec($command);
+	die('ok');
+}
+
 function vkWPtools_backup_theme() {
 	$theme = $_POST['theme'];
 	$directory = WP_CONTENT_DIR . "/themes/{$theme}";
@@ -43,4 +50,5 @@ function vkWPtools_backup_theme() {
 
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
+add_action('wp_ajax_vkWPtools_clean_backups', 'vkWPtools_clean_backups');
 ?>

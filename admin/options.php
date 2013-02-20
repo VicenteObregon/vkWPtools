@@ -11,6 +11,13 @@ jQuery(document).ready(function($) {
 			$("#backup_theme").removeAttr("disabled");
 		});
 	});
+	$("#clean_backups").click(function () {
+		$(this).attr("disabled", "disabled");
+		$.post(ajaxurl, { "action": "vkWPtools_clean_backups" }, function(response) {
+			alert(response);
+			$("#clean_backups").removeAttr("disabled");
+		});
+	});
 });
 </script>
 <div class="wrap">
@@ -28,6 +35,7 @@ jQuery(document).ready(function($) {
 				<?php endforeach; ?>
 			</select>
 			<button id="backup_theme">Backup</button>
+			<button id="clean_backups">Clean backups</button>
 		</td>
 	</tr>
 	</table>
