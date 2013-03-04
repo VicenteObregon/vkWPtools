@@ -72,9 +72,19 @@ function vkWPtools_restore_themes_name() {
 	die('Ok');
 }
 
+function vkWPtools_delete_key() {
+	$key = $_POST['key'];
+	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
+	foreach ($posts as $post) {
+		delete_post_meta($post->ID, $key);
+	}
+	die('Ok');
+}
+
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
 add_action('wp_ajax_vkWPtools_clean_backups', 'vkWPtools_clean_backups');
 add_action('wp_ajax_vkWPtools_backup_themes_name', 'vkWPtools_backup_themes_name');
 add_action('wp_ajax_vkWPtools_restore_themes_name', 'vkWPtools_restore_themes_name');
+add_action('wp_ajax_vkWPtools_delete_key', 'vkWPtools_delete_key');
 ?>

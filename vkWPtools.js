@@ -32,4 +32,16 @@ jQuery(document).ready(function($) {
             $("#restore_themes_name").removeAttr("disabled");
         });
     });
+    $("#delete_key").click(function() {
+        var key = $("#key_to_delete").val();
+
+        if (key == "")
+            return;
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_delete_key", "key": key }, function(response) {
+            alert(response);
+            $("#key_to_delete option[value=\"" + key + "\"]").remove();
+            $("#delete_key").removeAttr("disabled");
+        });
+    });
 });
