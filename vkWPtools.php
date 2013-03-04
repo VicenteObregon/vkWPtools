@@ -24,7 +24,8 @@ function vkWPtools_options() {
 	if (!current_user_can('manage_options')) {
 		wp_die(__('You do not have sufficient permissions to access this page.'));
 	}
-	include_once(dirname(__FILE__) . '/admin/options.php');
+	wp_enqueue_script('vkWPtools', content_url() . '/plugins/vkWPtools/vkWPtools.js', array('jquery'));
+	include_once(dirname(__FILE__) . '/vkWPtools_options.php');
 }
 
 function vkWPtools_menu() {
