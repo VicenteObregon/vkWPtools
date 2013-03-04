@@ -40,9 +40,10 @@ function vkWPtools_clean_backups() {
 
 function vkWPtools_backup_theme() {
 	$theme = $_POST['theme'];
-	$directory = WP_CONTENT_DIR . "/themes/{$theme}";
+	$directory = WP_CONTENT_DIR . '/themes/';
+	chdir($directory);
 	$filename = WP_CONTENT_DIR . "/vkWPtools/backups/themes/{$theme}.zip";
-	$command = "zip -r \"{$filename}\" \"{$directory}\"";
+	$command = "zip -r \"{$filename}\" {$theme} -x {$theme}/.git\\* {$theme}\\*.sh";
 	exec($command);
 	$url = content_url() . "/vkWPtools/backups/themes/{$theme}.zip";
 	die($url);
