@@ -18,4 +18,18 @@ jQuery(document).ready(function($) {
             $("#clean_backups").removeAttr("disabled");
         });
     });
+    $("#backup_themes_name").click(function() {
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_backup_themes_name" }, function(response) {
+            alert(response);
+            $("#backup_themes_name").removeAttr("disabled");
+        });
+    });
+    $("#restore_themes_name").click(function() {
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_restore_themes_name" }, function(response) {
+            alert(response);
+            $("#restore_themes_name").removeAttr("disabled");
+        });
+    });
 });

@@ -36,7 +36,7 @@ function vkWPtools_clean_backups() {
 	$directory = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
 	$command = "rm -f \"{$directory}\"/*.zip";
 	exec($command);
-	die('ok');
+	die('Ok');
 }
 
 function vkWPtools_backup_theme() {
@@ -50,7 +50,31 @@ function vkWPtools_backup_theme() {
 	die($url);
 }
 
+function vkWPtools_backup_themes_name() {
+	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
+	foreach ($posts as $post) {
+		$title = get_post_meta($post->ID, '_vkWPtools_theme_name', true);
+		if ($title == $post->post_title)
+			continue;
+		echo get_the_title($post->ID) . ' = ' . update_post_meta($post->ID, '_vkWPtools_theme_name', $post->post_title). "\n";
+	}
+	die('Ok');
+}
+
+function vkWPtools_restore_themes_name() {
+	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
+	foreach ($posts as $post) {
+		$title = get_post_meta($post->ID, '_vkWPtools_theme_name', true);
+		if ($title == $post->post_title)
+			continue;
+		echo get_the_title($post->ID) . ' = ' . wp_update_post(array('ID' => $post->ID, 'post_title' => $title)) . "\n";
+	}
+	die('Ok');
+}
+
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
 add_action('wp_ajax_vkWPtools_clean_backups', 'vkWPtools_clean_backups');
+add_action('wp_ajax_vkWPtools_backup_themes_name', 'vkWPtools_backup_themes_name');
+add_action('wp_ajax_vkWPtools_restore_themes_name', 'vkWPtools_restore_themes_name');
 ?>
