@@ -26,10 +26,10 @@ foreach ($posts as $post) {
 		</td>
 	</tr>
 	<tr>
-		<th><label>Backup themes name:</label></th>
+		<th><label>Backup pages name:</label></th>
 		<td>
-			<button id="backup_themes_name" class="button">Backup</button>
-			<button id="restore_themes_name" class="button">Restore</button>
+			<button id="backup_pages_name" class="button">Backup</button>
+			<button id="restore_pages_name" class="button">Restore</button>
 		</td>
 	</tr>
 	<tr>
