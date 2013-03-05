@@ -21,9 +21,7 @@ foreach ($directories as $directory) {
 }
 
 function vkWPtools_options() {
-	if (!current_user_can('manage_options')) {
-		wp_die(__('You do not have sufficient permissions to access this page.'));
-	}
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges.'));
 	wp_enqueue_script('vkWPtools', content_url() . '/plugins/vkWPtools/vkWPtools.js', array('jquery'));
 	include_once(dirname(__FILE__) . '/vkWPtools_options.php');
 }
@@ -33,13 +31,15 @@ function vkWPtools_menu() {
 }
 
 function vkWPtools_clean_backups() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
 	$directory = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
 	$command = "rm -f \"{$directory}\"/*.zip";
 	exec($command);
-	die('Ok');
+	wp_die('Ok');
 }
 
 function vkWPtools_backup_theme() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
 	$theme = $_POST['theme'];
 	$directory = WP_CONTENT_DIR . '/themes/';
 	chdir($directory);
@@ -47,10 +47,11 @@ function vkWPtools_backup_theme() {
 	$command = "zip -r \"{$filename}\" {$theme} -x {$theme}/.git\\* {$theme}\\*.sh";
 	exec($command);
 	$url = content_url() . "/vkWPtools/backups/themes/{$theme}.zip";
-	die($url);
+	wp_die($url);
 }
 
 function vkWPtools_backup_themes_name() {
+	current_user_can('edit_others_pages') or wp_die(__('Cannot edit other\'s pages'));
 	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
 	foreach ($posts as $post) {
 		$title = get_post_meta($post->ID, '_vkWPtools_theme_name', true);
@@ -58,10 +59,11 @@ function vkWPtools_backup_themes_name() {
 			continue;
 		echo get_the_title($post->ID) . ' = ' . update_post_meta($post->ID, '_vkWPtools_theme_name', $post->post_title). "\n";
 	}
-	die('Ok');
+	wp_die('Ok');
 }
 
 function vkWPtools_restore_themes_name() {
+	current_user_can('edit_others_pages') or wp_die(__('Cannot edit other\'s pages'));
 	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
 	foreach ($posts as $post) {
 		$title = get_post_meta($post->ID, '_vkWPtools_theme_name', true);
@@ -69,16 +71,17 @@ function vkWPtools_restore_themes_name() {
 			continue;
 		echo get_the_title($post->ID) . ' = ' . wp_update_post(array('ID' => $post->ID, 'post_title' => $title)) . "\n";
 	}
-	die('Ok');
+	wp_die('Ok');
 }
 
 function vkWPtools_delete_key() {
+	current_user_can('edit_others_pages') or wp_die(__('Cannot edit other\'s pages'));
 	$key = $_POST['key'];
 	$posts = get_posts(array('post_type' => 'page', 'numberposts' => -1));
 	foreach ($posts as $post) {
 		delete_post_meta($post->ID, $key);
 	}
-	die('Ok');
+	wp_die('Ok');
 }
 
 add_action('admin_menu', 'vkWPtools_menu');
