@@ -9,12 +9,13 @@ Author URI: http://desarrollogis.dyndns.org/
 License: GPL2
 */
 
-if (!defined('WP_CONTENT_DIR'))
-	define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+if (!defined('vkWPtools_DIR'))
+	define('vkWPtools_DIR', ABSPATH . 'wp-content/plugins/vkWPtools/');
+if (!defined('vkWPtools_URL'))
+	define('vkWPtools_URL', content_url() . '/plugins/vkWPtools/');
 $directories = array();
-$directories[] = WP_CONTENT_DIR . '/vkWPtools';
-$directories[] = WP_CONTENT_DIR . '/vkWPtools/backups';
-$directories[] = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
+$directories[] = vkWPtools_DIR . 'backups';
+$directories[] = vkWPtools_DIR . 'backups/themes';
 foreach ($directories as $directory) {
 	if (!is_dir($directory))
 		mkdir($directory);
@@ -22,8 +23,8 @@ foreach ($directories as $directory) {
 
 function vkWPtools_options() {
 	current_user_can('manage_options') or wp_die(__('Insufficient privileges.'));
-	wp_enqueue_script('vkWPtools', content_url() . '/plugins/vkWPtools/vkWPtools.js', array('jquery'));
-	include_once(dirname(__FILE__) . '/vkWPtools_options.php');
+	wp_enqueue_script('vkWPtools', vkWPtools_URL . 'vkWPtools.js', array('jquery'));
+	include_once(vkWPtools_DIR . 'vkWPtools_options.php');
 }
 
 function vkWPtools_menu() {
@@ -32,8 +33,9 @@ function vkWPtools_menu() {
 
 function vkWPtools_clean_backups() {
 	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
-	$directory = WP_CONTENT_DIR . '/vkWPtools/backups/themes';
-	$command = "rm -f \"{$directory}\"/*.zip";
+	$directory = vkWPtools_DIR . 'backups/themes';
+	chdir($directory);
+	$command = "rm -f *.zip";
 	exec($command);
 	wp_die('Ok');
 }
@@ -41,12 +43,12 @@ function vkWPtools_clean_backups() {
 function vkWPtools_backup_theme() {
 	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
 	$theme = $_POST['theme'];
-	$directory = WP_CONTENT_DIR . '/themes/';
+	$directory = dirname(dirname(vkWPtools_DIR)) . '/themes';
 	chdir($directory);
-	$filename = WP_CONTENT_DIR . "/vkWPtools/backups/themes/{$theme}.zip";
+	$filename = vkWPtools_DIR . "backups/themes/{$theme}.zip";
 	$command = "zip -r \"{$filename}\" {$theme} -x {$theme}/.git\\* {$theme}\\*.sh";
 	exec($command);
-	$url = content_url() . "/vkWPtools/backups/themes/{$theme}.zip";
+	$url = vkWPtools_URL . "backups/themes/{$theme}.zip";
 	wp_die($url);
 }
 
