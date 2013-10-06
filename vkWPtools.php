@@ -3,7 +3,7 @@
 Plugin Name: vkWPtools
 Plugin URI: http://desarrollogis.dyndns.org/
 Description: vkWPtools Plugin.
-Version: 1.01
+Version: 1.02
 Author: desarrollogis
 Author URI: http://desarrollogis.dyndns.org/
 License: GPL2
@@ -75,10 +75,28 @@ function vkWPtools_backup_folder() {
 	$folder = basename(ABSPATH . $folder);
 	chdir($directory);
 	$filename = vkWPtools_DIR . "backups/folders/{$folder}.zip";
-	$command = "zip -r \"{$filename}\" {$folder} -x {$folder}/.git\\* {$folder}\\*.sh";
+	$command = "zip -r \"{$filename}\" \"{$folder}\" -x \"{$folder}\"/.git\\* \"{$folder}\"\\*.sh";
 	exec($command);
 	$url = vkWPtools_URL . "backups/folders/{$folder}.zip";
 	die($url);
+}
+
+function vkWPtools_list_folder() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
+	$folder = $_POST['folder'];
+	$directory = ABSPATH . $folder;
+	$list = array();
+	$dir = $directory;
+	$handle = opendir($dir);
+	while ($name = readdir($handle)) {
+		if (in_array($name, array('.', '..'))) {
+			continue;
+		}
+		$list[] = $name;
+	}
+	closedir($handle);
+	$list = implode("\n", $list);
+	die($list);
 }
 
 function vkWPtools_backup_pages_name() {
@@ -119,6 +137,7 @@ add_action('admin_enqueue_scripts', 'vkWPtools_admin_enqueue_scripts');
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
 add_action('wp_ajax_vkWPtools_backup_folder', 'vkWPtools_backup_folder');
+add_action('wp_ajax_vkWPtools_list_folder', 'vkWPtools_list_folder');
 add_action('wp_ajax_vkWPtools_clean_theme_backups', 'vkWPtools_clean_theme_backups');
 add_action('wp_ajax_vkWPtools_clean_folder_backups', 'vkWPtools_clean_folder_backups');
 add_action('wp_ajax_vkWPtools_backup_pages_name', 'vkWPtools_backup_pages_name');

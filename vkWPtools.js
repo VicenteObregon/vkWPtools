@@ -18,6 +18,15 @@ jQuery(document).ready(function($) {
             $("#clean_theme_backups").removeAttr("disabled");
         });
     });
+    $("#list_folder").click(function() {
+        var folder = $("#folder_to_backup").val();
+
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_list_folder", "folder": folder }, function(response) {
+            alert(response);
+            $("#list_folder").removeAttr("disabled");
+        });
+    });
     $("#backup_folder").click(function() {
         var folder = $("#folder_to_backup").val();
 

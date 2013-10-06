@@ -46,6 +46,7 @@ else {
 <th><label for="folder_to_backup">Backup folder:</label></th>
 <td>
 <input type="text" id="folder_to_backup" size="100" value="wp-content/" />
+<button id="list_folder" class="button">List</button>
 <button id="backup_folder" class="button">Backup</button>
 <button id="clean_folder_backups" class="button">Clean backups</button>
 </td>
