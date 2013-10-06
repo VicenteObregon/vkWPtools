@@ -39,7 +39,15 @@ else {
 <?php endforeach; ?>
 </select>
 <button id="backup_theme" class="button">Backup</button>
-<button id="clean_backups" class="button">Clean backups</button>
+<button id="clean_theme_backups" class="button">Clean backups</button>
+</td>
+</tr>
+<tr>
+<th><label for="folder_to_backup">Backup folder:</label></th>
+<td>
+<input type="text" id="folder_to_backup" size="100" value="wp-content/" />
+<button id="backup_folder" class="button">Backup</button>
+<button id="clean_folder_backups" class="button">Clean backups</button>
 </td>
 </tr>
 <tr>

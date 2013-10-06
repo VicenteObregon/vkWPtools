@@ -18,6 +18,7 @@ if (!defined('vkWPtools_URL')) {
 $directories = array();
 $directories[] = vkWPtools_DIR . 'backups';
 $directories[] = vkWPtools_DIR . 'backups/themes';
+$directories[] = vkWPtools_DIR . 'backups/folders';
 foreach ($directories as $directory) {
 	if (!is_dir($directory)) {
 		mkdir($directory);
@@ -37,7 +38,7 @@ function vkWPtools_menu() {
 	add_options_page('vkWPtools Options', 'vkWPtools', 'manage_options', 'vkWPtools', 'vkWPtools_options');
 }
 
-function vkWPtools_clean_backups() {
+function vkWPtools_clean_theme_backups() {
 	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
 	$directory = vkWPtools_DIR . 'backups/themes';
 	chdir($directory);
@@ -55,6 +56,28 @@ function vkWPtools_backup_theme() {
 	$command = "zip -r \"{$filename}\" {$theme} -x {$theme}/.git\\* {$theme}\\*.sh";
 	exec($command);
 	$url = vkWPtools_URL . "backups/themes/{$theme}.zip";
+	die($url);
+}
+
+function vkWPtools_clean_folder_backups() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
+	$directory = vkWPtools_DIR . 'backups/folders';
+	chdir($directory);
+	$command = "rm -f *.zip";
+	exec($command);
+	die('Ok');
+}
+
+function vkWPtools_backup_folder() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
+	$folder = $_POST['folder'];
+	$directory = dirname(ABSPATH . $folder);
+	$folder = basename(ABSPATH . $folder);
+	chdir($directory);
+	$filename = vkWPtools_DIR . "backups/folders/{$folder}.zip";
+	$command = "zip -r \"{$filename}\" {$folder} -x {$folder}/.git\\* {$folder}\\*.sh";
+	exec($command);
+	$url = vkWPtools_URL . "backups/folders/{$folder}.zip";
 	die($url);
 }
 
@@ -95,7 +118,9 @@ function vkWPtools_delete_key() {
 add_action('admin_enqueue_scripts', 'vkWPtools_admin_enqueue_scripts');
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
-add_action('wp_ajax_vkWPtools_clean_backups', 'vkWPtools_clean_backups');
+add_action('wp_ajax_vkWPtools_backup_folder', 'vkWPtools_backup_folder');
+add_action('wp_ajax_vkWPtools_clean_theme_backups', 'vkWPtools_clean_theme_backups');
+add_action('wp_ajax_vkWPtools_clean_folder_backups', 'vkWPtools_clean_folder_backups');
 add_action('wp_ajax_vkWPtools_backup_pages_name', 'vkWPtools_backup_pages_name');
 add_action('wp_ajax_vkWPtools_restore_pages_name', 'vkWPtools_restore_pages_name');
 add_action('wp_ajax_vkWPtools_delete_key', 'vkWPtools_delete_key');
