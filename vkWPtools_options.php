@@ -70,5 +70,12 @@ else {
 <button id="delete_key" class="button">Delete</button>
 </td>
 </tr>
+<tr>
+<th>php.ini</th>
+<td>
+<textarea id="content_phpini" rows="10" cols="50"></textarea>
+<button id="load_phpini" class="button">Load</button>
+<button id="save_phpini" class="button">Save</button>
+</td>
 </table>
 </div>
