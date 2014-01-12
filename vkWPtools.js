@@ -69,4 +69,20 @@ jQuery(document).ready(function($) {
             $("#delete_key").removeAttr("disabled");
         });
     });
+    $("#load_phpini").click(function() {
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_load_phpini" }, function(response) {
+	    $("#content_phpini").val(response);
+            $("#load_phpini").removeAttr("disabled");
+        });
+    });
+    $("#save_phpini").click(function() {
+        var content = $("#content_phpini").val();
+
+        $(this).attr("disabled", "disabled");
+        $.post(ajaxurl, { "action": "vkWPtools_save_phpini", "content": content }, function(response) {
+	alert(response);
+            $("#save_phpini").removeAttr("disabled");
+        });
+    });
 });
