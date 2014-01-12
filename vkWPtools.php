@@ -133,6 +133,24 @@ function vkWPtools_delete_key() {
 	wp_die('Ok');
 }
 
+function vkWPtools_load_phpini() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
+	$filename = ABSPATH . 'wp-admin/php.ini';
+	$content = file_get_contents($filename);
+	$content = $content ? $content : '';
+	wp_die($content);
+}
+
+function vkWPtools_save_phpini() {
+	current_user_can('manage_options') or wp_die(__('Insufficient privileges'));
+	$content = $_POST['content'];
+	$filename = ABSPATH . 'wp-admin/php.ini';
+	if (!file_put_contents($filename, $content)) {
+		wp_die('Error');
+	}
+	wp_die('Ok');
+}
+
 add_action('admin_enqueue_scripts', 'vkWPtools_admin_enqueue_scripts');
 add_action('admin_menu', 'vkWPtools_menu');
 add_action('wp_ajax_vkWPtools_backup_theme', 'vkWPtools_backup_theme');
@@ -143,4 +161,6 @@ add_action('wp_ajax_vkWPtools_clean_folder_backups', 'vkWPtools_clean_folder_bac
 add_action('wp_ajax_vkWPtools_backup_pages_name', 'vkWPtools_backup_pages_name');
 add_action('wp_ajax_vkWPtools_restore_pages_name', 'vkWPtools_restore_pages_name');
 add_action('wp_ajax_vkWPtools_delete_key', 'vkWPtools_delete_key');
+add_action('wp_ajax_vkWPtools_load_phpini', 'vkWPtools_load_phpini');
+add_action('wp_ajax_vkWPtools_save_phpini', 'vkWPtools_save_phpini');
 ?>
